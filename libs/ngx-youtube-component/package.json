@@ -13,6 +13,6 @@
     "lib": {
       "entryFile": "public_api.ts"
     },
-    "dest": "../../ngx-youtube-component"
+    "dest": "../../dist/ngx-youtube-component"
   }
 }
