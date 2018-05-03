@@ -39,7 +39,6 @@ var YoutubeComponent = /** @class */ (function () {
     function YoutubeComponent(youtubeApiService, playerElement) {
         this.youtubeApiService = youtubeApiService;
         this.playerElement = playerElement;
-        this.iframeAPIReady = new core.EventEmitter();
     }
     YoutubeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -62,13 +61,13 @@ var YoutubeComponent = /** @class */ (function () {
                 if (_this.events.hasOwnProperty(eventListenerName)) {
                     var eventListener = _this.events[eventListenerName];
                     var subject_1 = new Subject.Subject();
-                    playerOptions.events[eventListenerName] = function (event) { return subject_1.next(event); };
+                    var handler = function (event) { return subject_1.next(event); };
+                    playerOptions.events[eventListenerName] = handler;
                     subject_1.subscribe(eventListener);
                 }
             });
         }
         this.youtubeApiService.getIframeApi().then(function (success) {
-            _this.iframeAPIReady.emit(success);
             _this.player = new success.Player(_this.playerElement.nativeElement, playerOptions);
             return _this.player;
         });
@@ -93,7 +92,6 @@ YoutubeComponent.propDecorators = {
     "videoId": [{ type: core.Input },],
     "playerVars": [{ type: core.Input },],
     "events": [{ type: core.Input },],
-    "iframeAPIReady": [{ type: core.Output },],
 };
 var YoutubeModule = /** @class */ (function () {
     function YoutubeModule() {

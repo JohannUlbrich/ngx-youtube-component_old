@@ -4,11 +4,9 @@ import {
   OnDestroy,
   Input,
   Output,
-  EventEmitter,
   ElementRef
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { YoutubeApiService } from './youtube.api.service';
 import {} from '@types/youtube';
 
@@ -22,7 +20,6 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   @Input() videoId: string;
   @Input() playerVars: YT.PlayerVars;
   @Input() events: YT.Events;
-  @Output() iframeAPIReady: EventEmitter<String> = new EventEmitter<String>();
 
   private player: YT.Player;
 
@@ -57,16 +54,15 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         if (this.events.hasOwnProperty(eventListenerName)) {
           const eventListener = this.events[eventListenerName];
           const subject = new Subject<any>();
+          const handler = event => subject.next(event);
 
-          playerOptions.events[eventListenerName] = event =>
-            subject.next(event);
+          playerOptions.events[eventListenerName] = handler;
           subject.subscribe(eventListener);
         }
       });
     }
 
     this.youtubeApiService.getIframeApi().then(success => {
-      this.iframeAPIReady.emit(success);
       this.player = new success.Player(
         this.playerElement.nativeElement,
         playerOptions

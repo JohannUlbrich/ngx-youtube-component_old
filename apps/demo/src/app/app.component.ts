@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { YoutubeApiService } from 'ngx-youtube-component';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ export class AppComponent implements OnInit {
   private movie;
   private buffered;
 
-  constructor() {
+  constructor(private youtubeApiService: YoutubeApiService) {
     this.buffered = false;
     this.movie = {
       youtubeId: 'B65hW9YYY5A'
@@ -20,9 +21,18 @@ export class AppComponent implements OnInit {
       width: '100%',
       height: '100%',
       playerVars: {
+        autoplay: 1,
+        autohide: 1,
         controls: 0,
+        disablekb: 1,
         enablejsapi: 1,
-        autoplay: 1
+        modestbranding: 1,
+        playsinline: 1,
+        rel: 0,
+        showinfo: 0,
+        fs: 1,
+        cc_load_policy: 0,
+        iv_load_policy: 3
       },
       events: {
         onReady: this.onReady.bind(this),
@@ -31,10 +41,11 @@ export class AppComponent implements OnInit {
     };
   }
 
-  ngOnInit() {}
-
-  private onYouTubeIframeAPIReady(event): void {
-    console.log(event);
+  ngOnInit() {
+    // Get API via Youtube API Service
+    this.youtubeApiService.getIframeApi().then(success => {
+      console.log(success);
+    });
   }
 
   private onReady(event): void {
@@ -44,6 +55,8 @@ export class AppComponent implements OnInit {
       videoId: this.movie.youtubeId,
       suggestedQuality: 'highres'
     });
+
+    event.target.pauseVideo();
   }
 
   private onStateChange(event): void {
@@ -51,7 +64,6 @@ export class AppComponent implements OnInit {
 
     if (event.data === 3 && !this.buffered) {
       this.buffered = true;
-      event.target.pauseVideo();
 
       setTimeout(function() {
         event.target.playVideo();

@@ -5,8 +5,8 @@
   "license": "MIT",
   "private": true,
   "peerDependencies": {
-    "@angular/common": "^5.2.0",
-    "@angular/core": "^5.2.0",
+    "@angular/common": "^5.0.0",
+    "@angular/core": "^5.0.0",
     "@types/youtube": "0.0.32"
   },
   "main": "bundles/ngx-youtube-component.umd.js",

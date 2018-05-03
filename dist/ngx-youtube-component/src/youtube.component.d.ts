@@ -1,5 +1,5 @@
 /// <reference types="youtube" />
-import { OnInit, OnDestroy, EventEmitter, ElementRef } from '@angular/core';
+import { OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { YoutubeApiService } from './youtube.api.service';
 export declare class YoutubeComponent implements OnInit, OnDestroy {
     private youtubeApiService;
@@ -9,7 +9,6 @@ export declare class YoutubeComponent implements OnInit, OnDestroy {
     videoId: string;
     playerVars: YT.PlayerVars;
     events: YT.Events;
-    iframeAPIReady: EventEmitter<String>;
     private player;
     constructor(youtubeApiService: YoutubeApiService, playerElement: ElementRef);
     ngOnInit(): void;

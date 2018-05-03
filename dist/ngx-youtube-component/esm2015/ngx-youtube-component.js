@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Component, Input, Output, EventEmitter, ElementRef, NgModule } from '@angular/core';
+import { Injectable, NgZone, Component, Input, ElementRef, NgModule } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { CommonModule } from '@angular/common';
 
@@ -59,7 +59,6 @@ class YoutubeComponent {
     constructor(youtubeApiService, playerElement) {
         this.youtubeApiService = youtubeApiService;
         this.playerElement = playerElement;
-        this.iframeAPIReady = new EventEmitter();
     }
     /**
      * @return {?}
@@ -84,13 +83,13 @@ class YoutubeComponent {
                 if (this.events.hasOwnProperty(eventListenerName)) {
                     const /** @type {?} */ eventListener = this.events[eventListenerName];
                     const /** @type {?} */ subject = new Subject();
-                    playerOptions.events[eventListenerName] = event => subject.next(event);
+                    const /** @type {?} */ handler = event => subject.next(event);
+                    playerOptions.events[eventListenerName] = handler;
                     subject.subscribe(eventListener);
                 }
             });
         }
         this.youtubeApiService.getIframeApi().then(success => {
-            this.iframeAPIReady.emit(success);
             this.player = new success.Player(this.playerElement.nativeElement, playerOptions);
             return this.player;
         });
@@ -119,7 +118,6 @@ YoutubeComponent.propDecorators = {
     "videoId": [{ type: Input },],
     "playerVars": [{ type: Input },],
     "events": [{ type: Input },],
-    "iframeAPIReady": [{ type: Output },],
 };
 
 /**
