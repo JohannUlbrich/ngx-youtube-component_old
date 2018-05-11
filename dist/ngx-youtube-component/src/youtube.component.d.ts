@@ -10,6 +10,7 @@ export declare class YoutubeComponent implements OnInit, OnDestroy {
     playerVars: YT.PlayerVars;
     events: YT.Events;
     private player;
+    private subscriptions;
     constructor(youtubeApiService: YoutubeApiService, playerElement: ElementRef);
     ngOnInit(): void;
     ngOnDestroy(): void;

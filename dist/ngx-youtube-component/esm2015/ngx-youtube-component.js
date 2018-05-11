@@ -59,6 +59,7 @@ class YoutubeComponent {
     constructor(youtubeApiService, playerElement) {
         this.youtubeApiService = youtubeApiService;
         this.playerElement = playerElement;
+        this.subscriptions = [];
     }
     /**
      * @return {?}
@@ -85,7 +86,7 @@ class YoutubeComponent {
                     const /** @type {?} */ subject = new Subject();
                     const /** @type {?} */ handler = event => subject.next(event);
                     playerOptions.events[eventListenerName] = handler;
-                    subject.subscribe(eventListener);
+                    this.subscriptions.push(subject.subscribe(eventListener));
                 }
             });
         }
@@ -98,7 +99,9 @@ class YoutubeComponent {
      * @return {?}
      */
     ngOnDestroy() {
-        // TODO: unsubscribe
+        for (const /** @type {?} */ subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }
 YoutubeComponent.decorators = [

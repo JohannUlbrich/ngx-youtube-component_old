@@ -7,6 +7,7 @@ import {
   ElementRef
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { ISubscription } from 'rxjs/Subscription';
 import { YoutubeApiService } from './youtube.api.service';
 import {} from '@types/youtube';
 
@@ -22,6 +23,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   @Input() events: YT.Events;
 
   private player: YT.Player;
+  private subscriptions: ISubscription[] = [];
 
   constructor(
     private youtubeApiService: YoutubeApiService,
@@ -57,7 +59,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
           const handler = event => subject.next(event);
 
           playerOptions.events[eventListenerName] = handler;
-          subject.subscribe(eventListener);
+          this.subscriptions.push(subject.subscribe(eventListener));
         }
       });
     }
@@ -73,6 +75,8 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // TODO: unsubscribe
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 }
